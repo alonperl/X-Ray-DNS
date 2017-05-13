@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>DNS X-Ray</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="js/graphs.js"></script>
+<div id="wrapper" class="toggled">
+
+    <!-- Sidebar menu -->
+    <div id="sidebar-wrapper"></div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-header">
+                        <h1>Statistics</h1>
+                    </div>
+	    <mark id="need_to_scan" style="visibility: hidden">
+    		You can see the statistics of our evaluations up to this point, after running<br>
+		our DNS X-Ray tool on your network. To perform the evaluation go to "X-Ray Your DNS"<br>
+		tab. For explanation on the tests that will be performed see "Home"<br>	<br>
+		   
+			 
+</mark>
+                    <p>
+                        This page presents results of DNS resolution platforms that used our tool thus far. The results are<br>
+                        collected since beginning 2017 and are stored in a database. Each time DNS X-ray is evaluated on<br>
+                        a new platform, the results are added to the database, and the graphs are updated to reflect the<br>
+                        data from the new evaluation.<br>
+                    </p>
+                </div>
+            </div>
+		<div class="row">
+                    <div class="col-lg-12">
+                        <h3 id="total_entries"></h3>
+                    </div>
+                </div>
+
+		<div class="row">
+		    <div id="os_graph_title" class="col-lg-12" style="visibility:hidden">
+			<h3>Detected OSes</h3><br>
+			<p>This is an educated guess of the resolver OS based on UDP source port allocation (minimum port and maximum port estimations).</p>
+                    	<div id="os_graph"></div>
+		    </div>
+                </div>
+		<hr id="hr0" class="bigHr"/>
+                <div class="row">
+		    <div id='sw_graph_title' class="col-lg-12" style="visibility:hidden">
+                        <h3>Detected DNS SW </h3><br>
+			<p>This is the best match of the resolver caching behavior fingerprint to the fingerprints of popular DNS resolver products/services we tested in the lab.</p>
+                        <div id="sw_graph" class="col-lg-12"></div>
+		   </div>
+                </div>
+                <hr id="hr1" class="bigHr"/>
+		<div class="row">
+		      <div id='ports_graph_title' class="col-lg-12" style="visibility:hidden">
+                        <h3>UDP ports allocation</h3><br>
+			<p>UDP port predictable" means that the resolver's UDP source port is static (at least in some of the time) or incremental.</p>			</div>
+                    <div id="ports_graph" class="col-lg-12"></div>
+                </div>
+		<hr id="hr2" class="bigHr"/>
+                <div class="row">
+		     <div id='txids_graph_title' class="col-lg-12" style="visibility:hidden">
+                        <h3>DNS TXID values allocation</h3><br>
+			<p>TXIDs predictable" means that the consecutive TXIDs obey the TXID generation formula of BIND 9.0.0-9.4.1 and as such are predictable</p>
+                     </div>
+                    <div id="txids_graph" class="col-lg-12"></div>
+                </div>
+		
+		<hr id="hr3" class="bigHr"/>
+                <div class="row">
+		    <div  id='cache_graph_title' class="col-lg-12" style="visibility:hidden">
+                        <h3>Number of Caches</h3>
+                    </div>
+                    <div id="cache_graph" class="col-lg-12"></div>
+                </div>
+
+		<hr id="hr5" class="bigHr"/>
+                <div class="row">
+                 <div class="col-lg-12"  id='usr_graph_title'  style="visibility:hidden">
+                        <h3>Countries</h3><br>
+                        <p> Countries in which the users ran our tests </p><br>
+                        </div>
+
+                    <div id="usr_graph" class="col-lg-12"></div>
+                </div>
+		<hr id="hr4" class="bigHr"/>
+                <div class="row">
+			<div class="col-lg-12" id='isp_graph_title' style="visibility:hidden">
+                        <h3>Internet Service Providers (ISPs)</h3><br>
+			<p> Internet Service Providers obtained via the browser's IP address as seen by our web server</p><br>
+                        </div>
+
+                    <div id="isp_graph" class="col-lg-12"></div>
+                </div>
+		
+		<hr id="hr6" class="bigHr"/>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+
+
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+
+    <script>
+        $(function(){
+            $("#sidebar-wrapper").load("sideBarMenu.html");
+        });
+    </script>
+
+</body>
+
+</html>

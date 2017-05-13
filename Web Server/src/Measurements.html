@@ -1,0 +1,179 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+		 
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+	  var xmlhttp_os_graph = new XMLHttpRequest;
+	  var xmlhttp_sw_graph = new XMLHttpRequest;
+          var xmlhttp_country_users_graph = new XMLHttpRequest;
+
+/*		function httpGetAsync(theUrl, callback)
+		{
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.onreadystatechange = function() {
+				if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+					callback(xmlHttp.responseText);
+			}
+			xmlHttp.open("GET", theUrl, true); // true for asynchronous
+			xmlHttp.send(null);
+		}
+
+
+		httpGetAsync("http://:80/get_os_graph",function(res) {*/
+document.getElementsByClassName("graphTitle").style.visibility = "visible";
+xmlhttp_country_users_graph.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                        var parsed = JSON.parse(xmlhttp_country_users_graph.responseText);
+
+
+                          // convert JSON to list of list
+//                        var parsed = JSON.parse(res);
+                          var arr_res = [["SW","Detections",{ role : "style"}]];
+                      for(var x in parsed){
+                                  arr_res.push([x,parsed[x],'color: #339966']);
+                           }
+
+                          google.charts.setOnLoadCallback(drawChart);
+
+                          // Callback that creates and populates a data table,
+                          // instantiates the pie chart, passes in the data and
+                          // draws it.
+                          function drawChart() {
+                                        var data = google.visualization.arrayToDataTable(arr_res);
+
+                                  var view = new google.visualization.DataView(data);
+                                  view.setColumns([0, 1,
+                                                                   { calc: "stringify",
+                                                                         sourceColumn: 1,
+                                                                         type: "string",
+                                                                         role: "annotation" },
+                                                                   2]);
+
+                                  var options = {
+                                        'title': "Countries users",
+					'position': "absolute",
+                                        'lef': "0%",
+                                        'top': "0%",
+                                        'width': 1200,
+                                        'height': 500,
+                                        'bar': {groupWidth: "95%"},
+                                        'legend': { position: "none" },
+                                  };
+                                  var chart = new google.visualization.ColumnChart(document.getElementById("usr_graph"));
+                                  chart.draw(view, options);
+
+                          }}};
+
+		xmlhttp_sw_graph.onreadystatechange = function() {
+            		if (this.readyState == 4 && this.status == 200) {
+  			var parsed = JSON.parse(xmlhttp_sw_graph.responseText);
+
+
+			  // convert JSON to list of list
+//			  var parsed = JSON.parse(res);
+			  var arr_res = [["SW","Detections",{ role : "style"}]];
+		      for(var x in parsed){
+				  arr_res.push([x,parsed[x],'color: #339966']);
+			   }
+			  
+			  google.charts.setOnLoadCallback(drawChart);
+
+			  // Callback that creates and populates a data table,
+			  // instantiates the pie chart, passes in the data and
+			  // draws it.
+			  function drawChart() {
+					var data = google.visualization.arrayToDataTable(arr_res);
+
+				  var view = new google.visualization.DataView(data);
+				  view.setColumns([0, 1,
+								   { calc: "stringify",
+									 sourceColumn: 1,
+									 type: "string",
+									 role: "annotation" },
+								   2]);
+
+				  var options = {
+					title: "SW detections",
+					position: "absolute",
+                                        left: "0%",
+                                        top: "0%",
+					width: 1200,
+					height: 500,
+					bar: {groupWidth: "95%"},
+					legend: { position: "none" },
+				  };
+				  var chart = new google.visualization.ColumnChart(document.getElementById("sw_graph"));
+				  chart.draw(view, options);
+               var url3 = "get_country_users_graph";
+                                xmlhttp_country_users_graph.open("GET", url3, true);
+                                xmlhttp_country_users_graph.send();
+
+			  
+			  }}};
+	
+		xmlhttp_os_graph.onreadystatechange = function() {
+            		if (this.readyState == 4 && this.status == 200) {
+  			var parsed = JSON.parse(xmlhttp_os_graph.responseText);
+
+
+			  // convert JSON to list of list
+//			  var parsed = JSON.parse(res);
+			  var arr_res = [];
+		      for(var x in parsed){
+				  arr_res.push([x,parsed[x]]);
+			   }
+			  
+			  google.charts.setOnLoadCallback(drawChart);
+
+			  // Callback that creates and populates a data table,
+			  // instantiates the pie chart, passes in the data and
+			  // draws it.
+			  function drawChart() {
+				
+				// Create the data table.
+				var data = new google.visualization.DataTable();
+				data.addColumn('string', 'OS');
+				data.addColumn('number', 'Count');
+				data.addRows(arr_res);
+
+				// Set chart options
+				var options = {'title':'OS detections',
+							   width:600,
+							   position: "absolute",
+				                           left: "0%",
+                          				   top: "0%",
+							   'height':500};
+
+				// Instantiate and draw our chart, passing in some options.
+				var chart = new google.visualization.PieChart(document.getElementById('os_graph'));
+				chart.draw(data, options);
+			  }
+		}};
+		var url = "get_os_graph";
+				xmlhttp_os_graph.open("GET", url, true);
+				xmlhttp_os_graph.send();
+		var url2 = "get_sw_graph";
+				xmlhttp_sw_graph.open("GET", url2, true);
+				xmlhttp_sw_graph.send();
+//	  	var url3 = "get_country_users_graph";
+//				xmlhttp_country_users_graph.open("GET", url3, true);
+  //                              xmlhttp_country_users_graph.send();
+	  
+	  
+	  
+      // Set a callback to run when the Google Visualization API is loaded.
+      
+    </script>
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <div id="os_graph"></div>
+	<div id="sw_graph" /*style="width: 900px; height: 300px;"*/></div>
+    <div id="usr_graph" /*style="width: 900px; height: 300px;"*/></div>
+  </body>
+</html>

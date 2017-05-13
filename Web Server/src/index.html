@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>DNS X-Ray</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<style>
+.fixed-ratio-resize { /* basic responsive img */
+        max-width: 80%;
+        height: auto;
+        width: auto\9; /* IE8 */
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="wrapper" class="toggled">
+
+    <!-- Sidebar menu -->
+    <div id="sidebar-wrapper"></div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-header">
+                        <h1>Home</h1>
+                        <h4>DNS X-Ray: Measuring Components and Evaluating Security of DNS Resolution Platforms</h4>
+                    </div>
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p>
+                        <h3>Motivation</h3>
+                        Domain Name System (DNS) is a fundamental element of the Internet providing lookup services for end users<br>
+                        as well as for a multitude of applications, systems and security mechanisms that depend on DNS, such as antispam<br>
+                        defences, routing security, firewalls, certificates and more. Caches constitute a critical component of<br>
+                        DNS, allowing to improve efficiency and reduce latency and traffic in the Internet. Understanding the behaviour,<br>
+                        configurations and topologies of caches in the DNS platforms in the Internet is important for efficiency and<br>
+                        security of Internet users and services. Our current view of basic Internet components is based on standard<br>
+                        documents and initial designs. However, most systems significantly evolved since their conception. Furthermore,<br>
+                        typically the networks or Internet operators make different choices when setting up their infrastructure.<br>
+                        In order to evaluate or improve security of the basic Internet components a clear understanding thereof is<br>
+                        important. Even basic questions, such as a number of caches in a DNS platform, are necessary to evaluate<br>
+                        vulnerabilities to cache poisoning attacks.<br>
+                        <br>
+                        <h3>DNS X-ray tool</h3>
+                        DNS X-ray is a new tool for measuring DNS resolution platforms.<br>
+                        Our tool identifies the different components in DNS resolution platforms, in particular, the IP addresses used<br>
+                        for lookup of records in nameservers and the caches. We infer the number of caches used as well as the DNS<br>
+                        software of the caches. Our tool utilises the caching behavior and the standard DNS protocol behavior for<br>
+                        collection of the data and its analysis.<br>
+                        </p>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-lg-12">
+		<img class="fixed-ratio-resize" src="Cache.JPG" alt=""/>
+                </div>
+            </div>
+
+		 <div class="row">
+                <div class="col-lg-12">
+			<h3>Caches Evaluation</h3>
+			<p> Our evaluation of tests consists of three phases: seeding, injecting, and validating. During the seeding phase
+we plant 'honey' DNS records into caches. Specifically, we
+cause the tested DNS resolution platforms to issue queries for records
+in the our domain. During the inject phase we evaluate overwriting records by replacing them with new values (see payloads in Table below). During the validation phase we check whether the cache contains new values, namely, overwriting succeeded. We check this by probing the values of the 'honey' records.
+ 
+Some tests may fail. Multiple failed tests may indicate unstable network infrastructure, changes in caching hosts, censorship, attacks, packet loss... To cope with failures, we repeat our tests multiple times. Hence the output table contains a fraction of tests that succeeded. However, even a single successful test suffices for inferring whether the tested cache supports a tested "overwriting" property.
+			</p>
+
+
+		<img class="fixed-ratio-resize" src="payloads.jpg" alt=""/>
+				  
+                </div>
+            </div>
+
+        </div>
+
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+
+<script>
+    $(function(){
+        $("#sidebar-wrapper").load("sideBarMenu.html");
+    });
+</script>
+
+</body>
+
+</html>

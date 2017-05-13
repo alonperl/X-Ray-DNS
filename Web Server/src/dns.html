@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>DNS X-Ray</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <link href="css/loader.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+   <style>
+	table {
+		table-layout: fixed;
+                 word-wrap: break-word;
+             }
+    </style>
+</head>
+
+<body>
+<div id="wrapper" class="toggled">
+
+    <!-- Sidebar menu -->
+    <div id="sidebar-wrapper"></div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-header">
+                        <h1>X-Ray your DNS</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row evaluation">
+                <div class="col-lg-12">
+                    <p>
+                        <h3>Please do not leave this page until the evaluation is over</h3>
+                    DNS X-ray is combination of a client side HTML and javascript code, with dedicated domain<br>
+                    names and a set of authoritative nameservers for these domains. The javascript code runs in the<br>
+                    browser and generates DNS requests to the ingress resolver which the client operating system is<br>
+                    configured to use for DNS lookups. The DNS resolver communicates with our nameservers in<br>
+                    order to resolve the queries. Using the queries arriving at the nameservers from the DNS platform<br>
+                    we learn the architecture of DNS platform, which software and OS is used by the caches, and the<br>
+                    mapping between IP addresses and the caches. We make an educated guess about the resolver<br>
+                    OS using the ports assignment and range, and we infer the DNS software using the caching<br>
+                    functionality "fingerprints". Our tool also evaluates the security of ports’ assignment and of<br>
+                    transaction identifier (TXID) values selection (specifically for BIND) by the DNS resolution platform.<br>
+                    <br>
+                    The test is complete once 100% of the DNS queries are completed (this typically takes several<br>
+                    minutes, and sometimes up to 15 minutes) and results of the evaluation appear on the page.<br>
+                    </p>
+                    <div  id="isMobile" ></div>
+                </div>
+
+                <script>
+                    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                        var mobilePara = document.createElement("h2");
+                        var mobileTxt = document.createTextNode("The X-Ray DNS scan cannot be done from mobile device");
+                        mobilePara.appendChild(mobileTxt);
+                        document.getElementById("isMobile").appendChild(mobilePara);
+                    } else {
+
+                        var startBtn = document.createElement("BUTTON");
+                        startBtn.setAttribute("id", "startBtn");
+                        startBtn.innerHTML = "Start X-Ray Test";
+                        startBtn.setAttribute("class", "btn btn-default");
+                        startBtn.setAttribute('onclick','startTT();');
+			startBtn.style.visibility = "hidden";
+                        document.getElementById("isMobile").appendChild(startBtn);
+                    }
+                </script>
+            </div>
+            <br/>
+            <div class="row evaluation">
+                <div class="col-lg-12">
+
+                    <div id="loader" style="visibility:hidden"></div>
+                    <div id="percents"></div>
+                    <button class="btn btn-default" id="showResultsBtn" onclick="showRes()" style="visibility:hidden">Show Results</button>
+		    <div id="plsWait"></div>
+                </div>
+            </div>
+            <div id="resultsTable" style="visibility:hidden">
+            <div class="row evaluation">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Details</h3>
+                                </div>
+
+                                <table class="table table-bordered table-hover">
+                                    <thead></thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>Origin IP of browser</th>
+                                        <td id="origin_IP"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Country</th>
+                                        <td id="outbound_countries"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>User Agent</th>
+                                        <td id="userAgent"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>ISP</th>
+                                        <td id="ISP"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Egress IPs</th>
+                                        <td id="outbound_IPs"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Egress ISPs</th>
+                                        <td id="outbound_ISPs"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Egress countries</th>
+                                        <td id="outbound_c"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>DNS Software</th>
+                                        <td id="udp_p_range"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>OS guess using UDP port range</th>
+                                        <td id="osGuess"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Cache Count</th>
+                                        <td id="cacheCount"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Test results</h3>
+                                </div>
+				<div class="panel-body">
+			         These tests evaluate different caching functionalities using the payloads listed in <a href="http://wprod.sit.fraunhofer.de/payloads.jpg" target="_blank">this table</a>.
+            			</div>
+
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th id="testN">Test number</th>
+                                        <th id="percOfSccss">Percentage of successful tests</th>
+                                    </tr>
+				    </thead>
+                                    <tbody>
+					   <tr>
+	                                        <th>1</th>
+        	                                <td id="percOfSuccess1"></td>
+	                                    </tr>
+                                           <tr>
+                                                <th>2</th>
+                                                <td id="percOfSuccess2"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>3</th>
+                                                <td id="percOfSuccess3"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>4</th>
+                                                <td id="percOfSuccess4"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>5</th>
+                                                <td id="percOfSuccess5"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>6</th>
+                                                <td id="percOfSuccess6"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>7</th>
+                                                <td id="percOfSuccess7"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>8</th>
+                                                <td id="percOfSuccess8"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>9</th>
+                                                <td id="percOfSuccess9"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>10</th>
+                                                <td id="percOfSuccess10"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>11</th>
+                                                <td id="percOfSuccess11"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>12</th>
+                                                <td id="percOfSuccess12"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>13</th>
+                                                <td id="percOfSuccess13"></td>
+                                            </tr>
+                                           <tr>
+                                                <th>14</th>
+                                                <td id="percOfSuccess14"></td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+
+            <div id="results"></div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+<script>
+    $(function(){
+        $("#sidebar-wrapper").load("sideBarMenu.html");
+    });
+
+    function done(){
+        $(".evaluation").hide();
+        $("#results").load("results.html");
+    }
+
+</script>
+<script src="js/tt25.js"></script>
+<!--<script src="js/showRes.js"></script>-->
+
+
+
+
+</body>
+
+</html>
